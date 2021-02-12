@@ -3,6 +3,7 @@ package net.fabricmc.example;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.example.mixin.ClientConnection;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
@@ -58,10 +59,7 @@ public class ExampleMod implements ModInitializer {
 
 		MinecraftClient mc = MinecraftClient.getInstance();
 
-
-
-
-
+		ClientConnection.connectClient("localhost", 44335);
 
 		keyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
 				"TestClientShortcut", // The translation key of the keybinding's name
@@ -78,7 +76,7 @@ public class ExampleMod implements ModInitializer {
 			}
 		});
 
-		Registry.register(Registry.ITEM, new Identifier("testmod", "testItem"), RUBY);
+		Registry.register(Registry.ITEM, new Identifier("testmod", "ruby"), RUBY);
 
 
 		System.out.println("Starting Mod...");

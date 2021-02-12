@@ -21,7 +21,7 @@ public class ClientConnection {
             @Environment(EnvType.CLIENT)
             public void run(){
                 try {
-                    Socket s = new Socket("localhost", 44335);
+                    Socket s = new Socket(ip, port);
                     PrintWriter out = new PrintWriter(s.getOutputStream());
                     Scanner in = new Scanner(s.getInputStream());
 
