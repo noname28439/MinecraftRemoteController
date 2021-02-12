@@ -1,8 +1,9 @@
-package net.fabricmc.example.mixin;
+package net.fabricmc.example.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.example.ExampleMod;
+import net.fabricmc.example.server.ControllServer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -105,7 +106,12 @@ public class ClientConnection {
                     }
 
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    if(e instanceof java.net.ConnectException){
+                        System.out.println("No Server running... ==> Starting onw Server");
+                        ControllServer.startServer();
+
+                    }else
+                        e.printStackTrace();
                 }
             }
         };
