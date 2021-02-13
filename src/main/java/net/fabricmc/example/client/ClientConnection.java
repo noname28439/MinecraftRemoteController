@@ -6,6 +6,7 @@ import net.fabricmc.example.ExampleMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
@@ -22,18 +23,30 @@ public class ClientConnection {
 
     static boolean connected = false;
 
+    static Thread syncronizer;
+
     public static void connectClient(String ip, int port){
 
         MinecraftClient mc = MinecraftClient.getInstance();
 
 
+        syncronizer = new Thread() {
+            @Environment(EnvType.CLIENT)
+            @Override
+            public void run(){
+                while(true) {
+                    try {Thread.currentThread().sleep(500);} catch (InterruptedException ex) {ex.printStackTrace();}
+                    syncLocation();
+                }
+            }
+        };
+
          thread = new Thread() {
             @Environment(EnvType.CLIENT)
             public void run(){
-
-
-
                     while(true) {
+
+                        //MinecraftClient.getInstance().getWindow().setTitle("Connected: "+String.valueOf(connected));
 
                         if(!connected){
                             try {Thread.currentThread().sleep(5*1000);} catch (InterruptedException ex) {ex.printStackTrace();}
@@ -45,6 +58,8 @@ public class ClientConnection {
                                 out = new PrintWriter(s.getOutputStream());
                                 in = new Scanner(s.getInputStream());
                                 connected = true;
+                                syncName();
+
                             } catch (Exception e) {
                                 if(e instanceof java.net.ConnectException) {
                                     System.out.println("Server didn't respond...");
@@ -134,6 +149,29 @@ public class ClientConnection {
         thread.start();
     }
 
+    public static void sendMessage(String text){
+        out.println(text);
+        out.flush();
+    }
 
+    public static void syncXCoord(){
+        sendMessage("CoordX:"+MinecraftClient.getInstance().player.getX());
+    }
+    public static void syncYCoord(){
+        sendMessage("CoordY:"+MinecraftClient.getInstance().player.getY());
+    }
+    public static void syncZCoord(){
+        sendMessage("CoordZ:"+MinecraftClient.getInstance().player.getZ());
+    }
+
+    public static void syncLocation(){
+        syncXCoord();
+        syncYCoord();
+        syncZCoord();
+    }
+
+    public static void syncName() {
+        sendMessage("Name:"+ MinecraftClient.getInstance().getSession().getUsername());
+    }
 
 }

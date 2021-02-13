@@ -3,8 +3,6 @@ package server;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class ServerConnection implements Runnable {
@@ -19,6 +17,7 @@ public class ServerConnection implements Runnable {
 
     String name = "Not Named";
 
+    Integer[] location = new Integer[3];
 
     public ServerConnection(Socket connection) {
         this.connection = connection;
@@ -45,6 +44,20 @@ public class ServerConnection implements Runnable {
 
                 if(args[0].equalsIgnoreCase("echo"))
                     ControllServer.sendMessageToAll(args[1]);
+                
+                
+                if(args[0].equalsIgnoreCase("Name"))
+                	name = args[1];
+                
+                if(args[0].equalsIgnoreCase("CoordX"))
+                	location[0] = Integer.valueOf(args[1]);
+                
+                if(args[0].equalsIgnoreCase("CoordY"))
+                	location[1] = Integer.valueOf(args[1]);
+                
+                if(args[0].equalsIgnoreCase("CoordZ"))
+                	location[2] = Integer.valueOf(args[1]);
+                
 
             }catch (java.util.NoSuchElementException e) {
                 System.err.println(name+" lost connection...");
