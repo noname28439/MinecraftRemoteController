@@ -3,8 +3,6 @@ package net.fabricmc.example.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.example.ExampleMod;
-import net.fabricmc.example.server.ControllServer;
-import net.fabricmc.example.server.ServerConnection;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -17,25 +15,46 @@ import java.util.Scanner;
 
 public class ClientConnection {
 
+    static Thread thread;
+    static Socket s;
+    static PrintWriter out;
+    static Scanner in;
+
+    static boolean connected = false;
+
     public static void connectClient(String ip, int port){
+
         MinecraftClient mc = MinecraftClient.getInstance();
-        Thread thread = new Thread(){
+
+
+         thread = new Thread() {
             @Environment(EnvType.CLIENT)
             public void run(){
-                try {
-                    Socket s = new Socket(ip, port);
-                    PrintWriter out = new PrintWriter(s.getOutputStream());
-                    Scanner in = new Scanner(s.getInputStream());
 
-                    out.println("Connected!");
-                    out.flush();
+
 
                     while(true) {
 
-                        if(true) {
+                        if(!connected){
+                            try {Thread.currentThread().sleep(5*1000);} catch (InterruptedException ex) {ex.printStackTrace();}
+                            System.out.println("Not Connected... ==> Trying to Connect...");
+
+                            try{
+                                System.out.println("Connecting to "+ip+":"+port);
+                                s = new Socket(ip, port);
+                                out = new PrintWriter(s.getOutputStream());
+                                in = new Scanner(s.getInputStream());
+                                connected = true;
+                            } catch (Exception e) {
+                                if(e instanceof java.net.ConnectException) {
+                                    System.out.println("Server didn't respond...");
+                                }else
+                                    e.printStackTrace();
+                            }
+                        }else {
                             try{
                                 String rcv = in.nextLine();
-                                String[] args = rcv.split(ServerConnection.commandSeperator);
+                                String[] args = rcv.split(":");
                                 try{
                                     mc.player.sendMessage(new LiteralText("[RemoteController] --> " + rcv), false);
                                 }catch(java.lang.NullPointerException e){
@@ -97,8 +116,11 @@ public class ClientConnection {
 
 
                             }catch(Exception e){
-                                System.out.println("Caught:");
-                                e.printStackTrace();
+                                if(e instanceof java.util.NoSuchElementException){
+                                    System.out.println("Server connection lost...");
+                                    connected = false;
+                                }else
+                                    e.printStackTrace();
                             }
 
                         }
@@ -106,18 +128,12 @@ public class ClientConnection {
 
                     }
 
-                } catch (Exception e) {
-                    if(e instanceof java.net.ConnectException){
-                        System.out.println("No Server running... ==> Starting onw Server");
-                        ControllServer.startServer();
 
-                    }else
-                        e.printStackTrace();
-                }
             }
         };
         thread.start();
     }
+
 
 
 }

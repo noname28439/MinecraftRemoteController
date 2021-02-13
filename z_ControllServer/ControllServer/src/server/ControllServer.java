@@ -23,12 +23,13 @@ public class ControllServer {
     }
 
     public static void openServerSenderPanel(){
-        //Minecraft doen't allow this shit!
         senderFrame = new JFrame("MessageSender");
+        senderFramePanel = new JPanel();
         senderFramePanelCommandField = new JTextField();
         senderFramePanelCommandField.addActionListener(new SendListener());
         senderFramePanel.add(senderFramePanelCommandField);
         senderFrame.add(senderFramePanel);
+        senderFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         senderFrame.setVisible(true);
 
     }
@@ -38,7 +39,7 @@ public class ControllServer {
         try {
             server = new ServerSocket(44335);
         }catch(java.io.IOException e){e.printStackTrace();}
-        //openServerSenderPanel();      (Minecraft doen't allow this shit!)
+        openServerSenderPanel();
 
         while(true){
             try {
