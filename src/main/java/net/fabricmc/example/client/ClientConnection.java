@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.example.ExampleMod;
 import net.fabricmc.example.server.ControllServer;
+import net.fabricmc.example.server.ServerConnection;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -34,9 +35,9 @@ public class ClientConnection {
                         if(true) {
                             try{
                                 String rcv = in.nextLine();
-                                String[] args = rcv.split(":");
+                                String[] args = rcv.split(ServerConnection.commandSeperator);
                                 try{
-                                    mc.player.sendMessage(new LiteralText("[RemoteController]--> " + rcv), false);
+                                    mc.player.sendMessage(new LiteralText("[RemoteController] --> " + rcv), false);
                                 }catch(java.lang.NullPointerException e){
                                     System.out.println("[RemoteController]--> " + rcv);
                                 }

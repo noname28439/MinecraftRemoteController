@@ -1,4 +1,4 @@
-package net.fabricmc.example.server;
+package server;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

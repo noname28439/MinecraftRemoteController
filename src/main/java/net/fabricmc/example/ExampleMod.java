@@ -14,6 +14,7 @@ import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.lwjgl.glfw.GLFW;
@@ -59,7 +60,8 @@ public class ExampleMod implements ModInitializer {
 			while (keyBinding.wasPressed()) {
 				//client.player.sendMessage(new LiteralText("Key 1 was pressed!"), false);
 				//mc.player.sendChatMessage("#sel");
-				mc.openScreen(new ConnectScreen(new TitleScreen(), mc, "localhost", 25565));
+				//mc.openScreen(new ConnectScreen(new TitleScreen(), mc, "localhost", 25565));
+				MinecraftClient.getInstance().player.sendMessage(new LiteralText("Test Message!"), false);
 			}
 		});
 

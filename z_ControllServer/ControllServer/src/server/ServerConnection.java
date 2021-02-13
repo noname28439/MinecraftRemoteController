@@ -1,4 +1,4 @@
-package net.fabricmc.example.server;
+package server;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,7 +14,7 @@ public class ServerConnection implements Runnable {
     Scanner in;
     Thread listener;
 
-    String commandSeperator = ":";
+    public static String commandSeperator = ":";
 
 
     String name = "Not Named";
@@ -43,7 +43,8 @@ public class ServerConnection implements Runnable {
                 System.out.println("--> "+rcv);
                 String[] args = rcv.split(commandSeperator);
 
-
+                if(args[0].equalsIgnoreCase("echo"))
+                    ControllServer.sendMessageToAll(args[1]);
 
             }catch (java.util.NoSuchElementException e) {
                 System.err.println(name+" lost connection...");
@@ -63,7 +64,6 @@ public class ServerConnection implements Runnable {
     public void sendMessage(String text) {
         out.println(text);
         out.flush();
-        System.out.println("<-- "+text);
     }
 
 }
