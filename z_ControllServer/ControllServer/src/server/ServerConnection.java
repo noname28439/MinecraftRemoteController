@@ -17,7 +17,7 @@ public class ServerConnection implements Runnable {
 
     String name = "Not Named";
 
-    Integer[] location = new Integer[3];
+    static int[] location = new int[3];
 
     public ServerConnection(Socket connection) {
         this.connection = connection;
@@ -49,14 +49,15 @@ public class ServerConnection implements Runnable {
                 if(args[0].equalsIgnoreCase("Name"))
                 	name = args[1];
                 
+                
                 if(args[0].equalsIgnoreCase("CoordX"))
-                	location[0] = Integer.valueOf(args[1]);
+                	location[0] = Integer.valueOf(args[1].split("\\.")[0]);
                 
                 if(args[0].equalsIgnoreCase("CoordY"))
-                	location[1] = Integer.valueOf(args[1]);
+                	location[1] = Integer.valueOf(args[1].split("\\.")[0]);
                 
                 if(args[0].equalsIgnoreCase("CoordZ"))
-                	location[2] = Integer.valueOf(args[1]);
+                	location[2] = Integer.valueOf(args[1].split("\\.")[0]);
                 
 
             }catch (java.util.NoSuchElementException e) {

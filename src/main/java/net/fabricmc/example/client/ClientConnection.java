@@ -36,10 +36,12 @@ public class ClientConnection {
             public void run(){
                 while(true) {
                     try {Thread.currentThread().sleep(500);} catch (InterruptedException ex) {ex.printStackTrace();}
-                    syncLocation();
+                    if(MinecraftClient.getInstance().player!=null)
+                        syncLocation();
                 }
             }
         };
+        syncronizer.start();
 
          thread = new Thread() {
             @Environment(EnvType.CLIENT)
