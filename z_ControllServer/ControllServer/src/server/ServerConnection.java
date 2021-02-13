@@ -5,6 +5,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Scanner;
 
+import display.ConnectionListFrame;
+
 public class ServerConnection implements Runnable {
 
     Socket connection;
@@ -15,9 +17,9 @@ public class ServerConnection implements Runnable {
     public static String commandSeperator = ":";
 
 
-    String name = "Not Named";
+    public String name = "Not Named";
 
-    static int[] location = new int[3];
+    public int[] location = new int[3];
 
     public ServerConnection(Socket connection) {
         this.connection = connection;
@@ -29,7 +31,7 @@ public class ServerConnection implements Runnable {
         listener = new Thread(this);
         listener.start();
 
-
+        
 
     }
 
@@ -62,6 +64,7 @@ public class ServerConnection implements Runnable {
 
             }catch (java.util.NoSuchElementException e) {
                 System.err.println(name+" lost connection...");
+                ControllServer.connections.remove(this);
                 listener.stop();
             }
 
@@ -69,7 +72,31 @@ public class ServerConnection implements Runnable {
 
     }
 
-    public void kill() {
+    public void clientKill() {
+    	sendMessage("kill");
+    }
+    
+	public void clientConnect(String ip, int port) {
+		sendMessage("connect:"+ip+":"+port);
+	}
+
+	public void clientDisconnect() {
+		sendMessage("disconnect");
+	}
+	
+	public void clientBaritoneGoal(int x, int y, int z) {
+		sendMessage("b_goal:"+x+":"+y+":"+z);
+	}
+	public void clientBaritonePath() {
+		sendMessage("b_path");
+	}
+	public void clientBaritoneStop() {
+		sendMessage("b_stop");
+	}
+    
+    
+    
+    public void killConnection() {
         System.out.println("Killing "+name+"...");
         ControllServer.connections.remove(this);
         listener.stop();

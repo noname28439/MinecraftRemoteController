@@ -25,12 +25,14 @@ public class ControllServer {
     public static void openServerSenderPanel(){
         senderFrame = new JFrame("MessageSender");
         senderFramePanel = new JPanel();
-        senderFramePanelCommandField = new JTextField();
+        senderFramePanelCommandField = new JTextField(50);
         senderFramePanelCommandField.addActionListener(new SendListener());
         senderFramePanel.add(senderFramePanelCommandField);
         senderFrame.add(senderFramePanel);
         senderFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        senderFrame.pack();
         senderFrame.setVisible(true);
+        
 
     }
 
@@ -61,6 +63,7 @@ public class ControllServer {
         @Override
         public void actionPerformed(ActionEvent e) {
             sendMessageToAll(senderFramePanelCommandField.getText());
+            senderFramePanelCommandField.setText("");
         }
     }
 
