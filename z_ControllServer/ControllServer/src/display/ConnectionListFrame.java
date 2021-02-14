@@ -27,7 +27,8 @@ public class ConnectionListFrame {
 		
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
-		frame.setTitle("Main IOT Controller");
+		frame.setTitle("ConnectoinList");
+		frame.setSize(200, 300);
 		frame.setVisible(true);
 		
 		

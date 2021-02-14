@@ -4,9 +4,11 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.example.ExampleMod;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.WindowSettings;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.item.Item;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
@@ -38,6 +40,8 @@ public class ClientConnection {
                     try {Thread.currentThread().sleep(500);} catch (InterruptedException ex) {ex.printStackTrace();}
                     if(MinecraftClient.getInstance().player!=null)
                         syncLocation();
+
+                    syncServer();
                 }
             }
         };
@@ -61,6 +65,8 @@ public class ClientConnection {
                                 in = new Scanner(s.getInputStream());
                                 connected = true;
                                 syncName();
+
+
 
                             } catch (Exception e) {
                                 if(e instanceof java.net.ConnectException) {
@@ -96,6 +102,11 @@ public class ClientConnection {
                                         mc.stop();
                                     }
 
+                                if(args.length>=2)
+                                    if (args[0].equalsIgnoreCase("chat")) {
+                                        mc.player.sendChatMessage(args[1].replace("_p/p_", ":"));
+                                    }
+
                                 if(args.length==1)
                                     if (args[0].equalsIgnoreCase("ping")) {
                                         out.println("Pong!");
@@ -120,7 +131,6 @@ public class ClientConnection {
                                         //mc.openScreen(new ConnectScreen(new TitleScreen(), mc, address, port));
                                         //mc.setCurrentServerEntry(new ServerInfo("", "localhost:25565", true));
                                         //new ConnectScreen(new TitleScreen(), mc, address, port);
-                                        //mc.getNetworkHandler().
                                     }
 
 
@@ -152,8 +162,10 @@ public class ClientConnection {
     }
 
     public static void sendMessage(String text){
-        out.println(text);
-        out.flush();
+        if(out!=null){
+            out.println(text);
+            out.flush();
+        }
     }
 
     public static void syncXCoord(){
@@ -174,6 +186,13 @@ public class ClientConnection {
 
     public static void syncName() {
         sendMessage("Name:"+ MinecraftClient.getInstance().getSession().getUsername());
+    }
+
+    public static void syncServer(){
+        if(MinecraftClient.getInstance().getNetworkHandler()!=null)
+            sendMessage("ServerIP:"+MinecraftClient.getInstance().getNetworkHandler().getConnection().getAddress());
+        else
+            sendMessage("ServerIP:null");
     }
 
 }
