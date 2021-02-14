@@ -29,8 +29,8 @@ public class ConnectionListFrame {
 		frame.pack();
 		frame.setTitle("ConnectoinList");
 		frame.setSize(200, 300);
+		frame.setAlwaysOnTop(true);
 		frame.setVisible(true);
-		
 		
 	}
 	
@@ -38,11 +38,11 @@ public class ConnectionListFrame {
 		String[] newList = new String[list.size()];
 		for(int i = 0; i<list.size();i++) {
 			ServerConnection cc = list.get(i);
-			newList[i]=(cc.name+"["+cc.location[0]+"|"+cc.location[1]+"|"+cc.location[2]+"]");
+			newList[i]=(cc.name+"[Server:"+cc.ip+"|X:"+cc.location[0]+"|Y:"+cc.location[1]+"|Z:"+cc.location[2]+"|HP:"+cc.hp+"|Food:"+cc.food+"]");
 		}
-			
 		
 		connectionList.setListData(newList);
+		frame.pack();
 		
 	}
 	

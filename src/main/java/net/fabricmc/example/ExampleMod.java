@@ -61,7 +61,10 @@ public class ExampleMod implements ModInitializer {
 				//client.player.sendMessage(new LiteralText("Key 1 was pressed!"), false);
 				//mc.player.sendChatMessage("#sel");
 				//mc.openScreen(new ConnectScreen(new TitleScreen(), mc, "localhost", 25565));
-				MinecraftClient.getInstance().player.sendMessage(new LiteralText("Test Message!"), false);
+				//MinecraftClient.getInstance().player.sendMessage(new LiteralText("Test Message!"), false);
+				KeyBinding.setKeyPressed(InputUtil.fromTranslationKey("key.keyboard.w"), true);
+				//try {Thread.currentThread().sleep(5000);} catch (InterruptedException ex) {ex.printStackTrace();}
+				//KeyBinding.setKeyPressed(InputUtil.fromTranslationKey("key.keyboard.w"), false);
 			}
 		});
 

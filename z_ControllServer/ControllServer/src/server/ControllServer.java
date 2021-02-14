@@ -31,6 +31,7 @@ public class ControllServer {
         senderFrame.add(senderFramePanel);
         senderFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         senderFrame.pack();
+        senderFrame.setAlwaysOnTop(true);
         senderFrame.setVisible(true);
         
 

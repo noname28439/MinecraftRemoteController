@@ -24,6 +24,7 @@ public class Display {
 					frame.setLocationRelativeTo(null);
 					frame.setResizable(true);
 					frame.setVisible(true);
+					frame.setAlwaysOnTop(true);
 					
 					frame.makestrat();
 					

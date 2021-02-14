@@ -40,13 +40,10 @@ public class Frame extends JFrame{
 	}
 	
 	public void draw(Graphics g) {
-		
-		
-			g.setColor(Color.BLACK);
-			g.fillRect(0, 0, WIDTH, HEIGHT);
 			
-
-			
+		g.setColor(new Color(59, 199, 227));
+			g.fillRect(0, 0, getWidth(), getHeight());
+		
 			World.draw(g);
 		
 		
@@ -56,7 +53,6 @@ public class Frame extends JFrame{
 	public void update(float tslf) {
 		ConnectionListFrame.setList(ControllServer.connections);
 		
-		if(Display.DO_GAME_TICK) 
 		World.update();
 	}
 	

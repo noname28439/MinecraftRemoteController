@@ -36,7 +36,6 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 	
 	
 	public static boolean isKeyPressed(int KeyCode) {
-		
 		return keys[KeyCode];
 	}
 	
@@ -73,16 +72,16 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 		mousey = e.getY();
 		
 		
-//		if(button==1) {
-//		World.drawChooseMark = true;
-//		}else 
-//		if(button==3) {
-//		World.mapx=msx+-(tox-e.getX());
-//		World.mapy=msy+-(toy-e.getY());
-//		}else if(button==1) {
-//			
-//			
-//		}
+		if(button==1) {
+			
+		}else 
+		if(button==3) {
+		World.mapx=msx+(tox-e.getX());
+		World.mapy=msy+(toy-e.getY());
+		}else if(button==1) {
+			
+			
+		}
 	}
 
 	@Override
@@ -99,8 +98,6 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 		toy = Keyboard.getMousey();
 		msx = World.mapx;
 		msy = World.mapy;
-		
-		//World.drawChooseMark = false;
 		
 	}
 

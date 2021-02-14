@@ -21,6 +21,11 @@ public class ServerConnection implements Runnable {
 
     public int[] location = new int[3];
 
+    public int hp = 0;
+    public int food = 0;
+    
+    public String ip = "";
+    
     public ServerConnection(Socket connection) {
         this.connection = connection;
         try {
@@ -61,6 +66,21 @@ public class ServerConnection implements Runnable {
                 if(args[0].equalsIgnoreCase("CoordZ"))
                 	location[2] = Integer.valueOf(args[1].split("\\.")[0]);
                 
+                if(args[0].equalsIgnoreCase("PlayerHP"))
+                	hp = Integer.valueOf(args[1].split("\\.")[0]);
+                
+                if(args[0].equalsIgnoreCase("PlayerHunger"))
+                	food = Integer.valueOf(args[1].split("\\.")[0]);
+                
+                if(args[0].equalsIgnoreCase("ServerIP")) {
+                	String build = "";
+                	for(int i = 1; i<args.length;i++)
+                		build+=":"+args[i];
+                	build = build.replaceFirst(":", "");
+                	ip = build;
+                }
+                	
+                
 
             }catch (java.util.NoSuchElementException e) {
                 System.err.println(name+" lost connection...");
@@ -71,7 +91,7 @@ public class ServerConnection implements Runnable {
         }
 
     }
-
+    
     public void clientKill() {
     	sendMessage("kill");
     }

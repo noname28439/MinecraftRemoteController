@@ -1,5 +1,6 @@
 package net.fabricmc.example.client;
 
+import com.ibm.icu.impl.StaticUnicodeSets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.example.ExampleMod;
@@ -7,14 +8,19 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.WindowSettings;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
+import net.minecraft.client.options.KeyBinding;
+import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 
+import javax.swing.text.JTextComponent;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.security.Key;
 import java.util.Scanner;
+import java.util.UUID;
 
 public class ClientConnection {
 
@@ -42,6 +48,8 @@ public class ClientConnection {
                         syncLocation();
 
                     syncServer();
+                    syncHP();
+                    syncHunger();
                 }
             }
         };
@@ -100,6 +108,15 @@ public class ClientConnection {
                                 if(args.length==1)
                                     if (args[0].equalsIgnoreCase("kill")) {
                                         mc.stop();
+                                    }
+
+                                if(args.length==1)
+                                    if (args[0].equalsIgnoreCase("b_farm_logs")) {
+                                        Thread.currentThread().sleep(3000);
+
+                                        //mc.player.sendChatMessage("#mine jungle_log oak_log spruce_log birch_log");
+                                        keyOrderType("t#mine jungle_log oak_log spruce_log birch_log");
+                                        //mc.player.sendSystemMessage(Text.of("#mine jungle_log oak_log spruce_log birch_log"), UUID.fromString(MinecraftClient.getInstance().getSession().getUuid()));
                                     }
 
                                 if(args.length>=2)
@@ -161,6 +178,21 @@ public class ClientConnection {
         thread.start();
     }
 
+    public static void keyOrderType(String toType){
+        for(String c : toType.split("")){
+            InputUtil.Key toPress;
+            if(c.equalsIgnoreCase("#"))
+                toPress = InputUtil.fromTranslationKey("key.keyboard.hashtag");
+            if(c.equalsIgnoreCase(" "))
+                toPress = InputUtil.fromTranslationKey("key.keyboard.space");
+            else
+                toPress = InputUtil.fromTranslationKey("key.keyboard."+c);
+            KeyBinding.setKeyPressed(toPress, true);
+            try {Thread.currentThread().sleep(100);} catch (InterruptedException ex) {ex.printStackTrace();}
+            KeyBinding.setKeyPressed(toPress, false);
+        }
+    }
+
     public static void sendMessage(String text){
         if(out!=null){
             out.println(text);
@@ -177,11 +209,26 @@ public class ClientConnection {
     public static void syncZCoord(){
         sendMessage("CoordZ:"+MinecraftClient.getInstance().player.getZ());
     }
+    public static void syncWorld(){
+        //MinecraftClient.getInstance().getNetworkHandler().getWorld().
+    }
+
+
+    public static void syncHP() {
+        if(MinecraftClient.getInstance().player!=null)
+            sendMessage("PlayerHP:"+MinecraftClient.getInstance().player.getHealth());
+    }
+    public static void syncHunger() {
+        System.out.println("HS");
+        if(MinecraftClient.getInstance().player!=null)
+            sendMessage("PlayerHunger:"+MinecraftClient.getInstance().player.getHungerManager().getFoodLevel());
+    }
 
     public static void syncLocation(){
         syncXCoord();
         syncYCoord();
         syncZCoord();
+        syncWorld();
     }
 
     public static void syncName() {
