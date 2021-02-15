@@ -12,9 +12,14 @@ import server.ServerConnection;
 
 public class World {
 
-	public static int mapx = 0, mapy = 0;
+	public static float mapx = 0, mapy = 0;
+	public static int zoom = 1;
 	
-	public static String watchServer = "localhost/127.0.0.1:25565";
+	public static String watchServer = "raspberrypi.fritz.box/192.168.178.45:25567";
+	/*
+	 * localhost/127.0.0.1:25565
+	 * raspberrypi.fritz.box/192.168.178.45:25567
+	 */
 	
 	
 	public static void load() {
@@ -37,6 +42,18 @@ public class World {
 		if(Keyboard.isKeyPressed(KeyEvent.VK_RIGHT))
 			mapx++;
 		
+		if(Keyboard.isKeyPressed(KeyEvent.VK_CONTROL)) {
+			if(Keyboard.isKeyPressed(KeyEvent.VK_PLUS)) {
+				zoom++;
+				Keyboard.keys[KeyEvent.VK_PLUS] = false;
+			}
+			if(Keyboard.isKeyPressed(KeyEvent.VK_MINUS)) {
+				zoom--;
+				Keyboard.keys[KeyEvent.VK_MINUS] = false;
+			}
+		}
+		
+		
 	}
 	
 	
@@ -50,7 +67,8 @@ public class World {
 		}
 		
 		g.setColor(Color.BLACK);
-		g.drawString("Server: "+watchServer, 100, 100);
+		Display.frame.setTitle("Server: "+watchServer);
+		g.drawString("["+mapx+"|"+mapy+"]", 100, 100);
 		
 	}
 	
@@ -58,8 +76,8 @@ public class World {
 		if(client.location[0]==0&&client.location[1]==0&&client.location[2]==0)
 			return;
 		g.setColor(Color.RED);
-		g.fillRect(client.location[0]-mapx, client.location[2]-mapy, 2, 2);
-		g.drawString(client.name+" ["+client.location[1]+"]", client.location[0]-mapx, client.location[2]-mapy);
+		g.fillRect((client.location[0]-(int)mapx)*zoom, (client.location[2]-(int)mapy)*zoom, zoom, zoom);
+		g.drawString(client.name+" ["+client.location[1]+"]", (client.location[0]-(int)mapx)*zoom, (client.location[2]-(int)mapy)*zoom);
 	}
 	
 	

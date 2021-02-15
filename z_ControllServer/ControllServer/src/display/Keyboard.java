@@ -27,11 +27,11 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 	}
 	
 	public static int getMousexInCoords() {
-		return -(World.mapx-Keyboard.getMousex());
+		return -((int)World.mapx-Keyboard.getMousex());
 	}
 	
 	public static int getMouseyInCoords() {
-		return -(World.mapy-Keyboard.getMousey());
+		return -((int)World.mapy-Keyboard.getMousey());
 	}
 	
 	
@@ -64,20 +64,34 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 		
 	}
 
+	
+	float bfmx = 0;
+	float bfmy = 0;
+	
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		
-		
 		mousex = e.getX();
 		mousey = e.getY();
-		
 		
 		if(button==1) {
 			
 		}else 
 		if(button==3) {
-		World.mapx=msx+(tox-e.getX());
-		World.mapy=msy+(toy-e.getY());
+//			World.mapx=(msx+(tox-e.getX())*World.zoom);
+//			World.mapy=(msy+(toy-e.getY())*World.zoom);
+			
+		float mvmx = bfmx-e.getX();
+		float mvmy = bfmy-e.getY();
+		
+		bfmx = e.getX();
+		bfmy = e.getY();
+		
+		World.mapx+=mvmx/World.zoom;
+		World.mapy+=mvmy/World.zoom;
+		
+		System.err.println(mvmx+"|"+mvmx);
+			
+		
 		}else if(button==1) {
 			
 			
@@ -89,15 +103,15 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 		mousex = e.getX();
 		mousey = e.getY();
 		
+		bfmx = e.getX();
+		bfmy = e.getY();
 		
 		
-		StartMousex = e.getX();
-		StartMousey = e.getY();
 		
-		tox = Keyboard.getMousex();
-		toy = Keyboard.getMousey();
-		msx = World.mapx;
-		msy = World.mapy;
+//		tox = Keyboard.getMousex();
+//		toy = Keyboard.getMousey();
+//		msx = World.mapx;
+//		msy = World.mapy;
 		
 	}
 

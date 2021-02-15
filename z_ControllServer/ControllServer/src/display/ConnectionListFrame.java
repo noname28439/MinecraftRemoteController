@@ -14,6 +14,7 @@ public class ConnectionListFrame {
 	public static JFrame frame;
 	public static JPanel panel;
 	public static JList<String> connectionList = new JList<>();
+	static String[] currentList = new String[] {};
 	
 	public static void load() {
 		
@@ -42,7 +43,9 @@ public class ConnectionListFrame {
 		}
 		
 		connectionList.setListData(newList);
+		currentList = newList;
 		frame.pack();
+		
 		
 	}
 	

@@ -33,8 +33,6 @@ public class ControllServer {
         senderFrame.pack();
         senderFrame.setAlwaysOnTop(true);
         senderFrame.setVisible(true);
-        
-
     }
 
     public static void startServer() {

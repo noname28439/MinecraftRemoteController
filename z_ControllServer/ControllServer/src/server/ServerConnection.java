@@ -6,6 +6,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import display.ConnectionListFrame;
+import display.Map;
+import display.World;
 
 public class ServerConnection implements Runnable {
 
@@ -46,7 +48,7 @@ public class ServerConnection implements Runnable {
         while(true) {
             try {
                 String rcv = in.nextLine();
-                System.out.println("--> "+rcv);
+                //System.out.println("--> "+rcv);
                 String[] args = rcv.split(commandSeperator);
 
                 if(args[0].equalsIgnoreCase("echo"))
@@ -79,13 +81,40 @@ public class ServerConnection implements Runnable {
                 	build = build.replaceFirst(":", "");
                 	ip = build;
                 }
+                
+                if(args[0].equalsIgnoreCase("BlockAt")) {
+                	//System.out.println("--> "+rcv);
+                	if(ip.equalsIgnoreCase(World.watchServer)) {
+                		int x = Integer.valueOf(args[1]);
+                    	int z = Integer.valueOf(args[2]);
+                    	int id = Integer.valueOf(args[3]);
+                    	
+                    	try {
+                    	for(int i = 0; i<Map.mapData.size();i++){
+                    		int[] ci = Map.mapData.get(i);
+                            if(ci[0]==x&&ci[1]==z)
+                                Map.mapData.remove(ci);
+                        }
+                    	}catch (java.util.ConcurrentModificationException e) {
+    						e.printStackTrace();
+    					}
+                    	
+                    	Map.mapData.add(new int[] {x, z, id});
+                	}
                 	
+                	
+                }
+                
                 
 
-            }catch (java.util.NoSuchElementException e) {
-                System.err.println(name+" lost connection...");
-                ControllServer.connections.remove(this);
-                listener.stop();
+            }catch (Exception e) {
+            	if(e instanceof java.util.NoSuchElementException) {
+            		System.err.println(name+" lost connection...");
+                    ControllServer.connections.remove(this);
+                    listener.stop();
+            	}else
+            		e.printStackTrace();
+                
             }
 
         }

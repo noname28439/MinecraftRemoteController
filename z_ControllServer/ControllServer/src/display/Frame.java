@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
+import java.util.Random;
 
 import javax.swing.JFrame;
 
@@ -39,14 +40,16 @@ public class Frame extends JFrame{
 		strat.show();
 	}
 	
+	static Color backGround = new Color(127, 127, 127);
+	
 	public void draw(Graphics g) {
-			
-		g.setColor(new Color(59, 199, 227));
-			g.fillRect(0, 0, getWidth(), getHeight());
 		
-			World.draw(g);
+		backGround = new Color(backGround.getRed()+new Random().nextInt(3)-1, backGround.getGreen()+new Random().nextInt(3)-1, backGround.getBlue()+new Random().nextInt(3)-1);
 		
+		g.setColor(backGround);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		
+		World.draw(g);
 		
 	}
 	

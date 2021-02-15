@@ -7,6 +7,8 @@ import net.fabricmc.example.client.ClientConnection;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.event.client.ClientTickCallback;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
@@ -16,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.text.LiteralText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import org.lwjgl.glfw.GLFW;
 
@@ -31,7 +34,7 @@ public class ExampleMod implements ModInitializer {
 	public static String ip = "";
 	public static int port = 25565;
 
-
+	@Environment(EnvType.CLIENT)
 	static void clientTick(){
 		if(!ip.equalsIgnoreCase("")){
 			MinecraftClient.getInstance().openScreen(new ConnectScreen(new TitleScreen(), MinecraftClient.getInstance(), ip, port));
@@ -62,9 +65,17 @@ public class ExampleMod implements ModInitializer {
 				//mc.player.sendChatMessage("#sel");
 				//mc.openScreen(new ConnectScreen(new TitleScreen(), mc, "localhost", 25565));
 				//MinecraftClient.getInstance().player.sendMessage(new LiteralText("Test Message!"), false);
-				KeyBinding.setKeyPressed(InputUtil.fromTranslationKey("key.keyboard.w"), true);
+				//KeyBinding.setKeyPressed(InputUtil.fromTranslationKey("key.keyboard.w"), true);
 				//try {Thread.currentThread().sleep(5000);} catch (InterruptedException ex) {ex.printStackTrace();}
 				//KeyBinding.setKeyPressed(InputUtil.fromTranslationKey("key.keyboard.w"), false);
+				BlockState standOn = MinecraftClient.getInstance().player.getEntityWorld().getBlockState(new BlockPos(mc.player.getBlockPos().getX(), mc.player.getBlockPos().getY()-1, mc.player.getBlockPos().getZ()));
+				standOn.getMaterial();
+				standOn.getBlock().toString();
+
+				int blockID = Block.getRawIdFromState(standOn);
+				MinecraftClient.getInstance().player.sendMessage(new LiteralText("ID: "+Block.getRawIdFromState(standOn)), false);
+
+
 			}
 		});
 

@@ -4,6 +4,9 @@ import com.ibm.icu.impl.StaticUnicodeSets;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.example.ExampleMod;
+import net.fabricmc.fabric.api.gamerule.v1.GameRuleRegistry;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.WindowSettings;
 import net.minecraft.client.gui.screen.DisconnectedScreen;
@@ -14,11 +17,13 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.Item;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 
 import javax.swing.text.JTextComponent;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.UUID;
 
@@ -32,11 +37,79 @@ public class ClientConnection {
     static boolean connected = false;
 
     static Thread syncronizer;
+    static Thread mapSyncer;
+
+
+    //x, z, id
+    static ArrayList<int[]> mapData = new ArrayList<>();
+
+    public static int getHighestBlockAt(int x, int z){
+        int id = 0;
+        int height = 255;
+        while(id==0){
+            BlockState standOn = MinecraftClient.getInstance().player.getEntityWorld().getBlockState(new BlockPos(x, height--, z));
+            id = Block.getRawIdFromState(standOn);
+        }
+
+        return id;
+        //Block type = MinecraftClient.getInstance().player.getEntityWorld().getBlockState(new BlockPos(x, 0, z)).getBlock();
+        //int id = Block.getRawIdFromState(MinecraftClient.getInstance().player.getEntityWorld().getBlockState(new BlockPos(x, 0, z)));
+    }
+
+    static int readMapState(int x, int z){
+        try{
+            for(int[] ci : mapData){
+                if(ci[0]==x&&ci[1]==z)
+                    return ci[2];
+            }
+        }catch (java.util.ConcurrentModificationException e){
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    public static void readMap(){
+        if(MinecraftClient.getInstance().player==null)
+            return;
+        if(MinecraftClient.getInstance().player.getBlockPos().getX()==0&&MinecraftClient.getInstance().player.getBlockPos().getY()==0&&MinecraftClient.getInstance().player.getBlockPos().getZ()==0)
+            return;
+
+        int px = MinecraftClient.getInstance().player.getBlockPos().getX();
+        int pz = MinecraftClient.getInstance().player.getBlockPos().getZ();
+
+        final int range = 64;
+        final int accuracy = 2;
+
+        for(int ax = -range; ax<range;ax+=accuracy)
+            for(int az = -range; az<range;az+=accuracy){
+                int x = px+ax;
+                int z = pz+az;
+                int currentBlockID = getHighestBlockAt(x,z);
+                if(readMapState(x, z)!=currentBlockID)
+                    try {Thread.currentThread().sleep(1);} catch (InterruptedException ex) {ex.printStackTrace();}
+                    sendMessage("BlockAt:"+x+":"+z+":"+currentBlockID);
+                mapData.add(new int[]{x, z, currentBlockID});
+            }
+
+    }
+
+
 
     public static void connectClient(String ip, int port){
 
         MinecraftClient mc = MinecraftClient.getInstance();
 
+        mapSyncer = new Thread() {
+            @Environment(EnvType.CLIENT)
+            @Override
+            public void run(){
+                while(true) {
+                    try {Thread.currentThread().sleep(500);} catch (InterruptedException ex) {ex.printStackTrace();}
+                    readMap();
+                }
+            }
+        };
+        mapSyncer.start();
 
         syncronizer = new Thread() {
             @Environment(EnvType.CLIENT)
@@ -50,6 +123,7 @@ public class ClientConnection {
                     syncServer();
                     syncHP();
                     syncHunger();
+
                 }
             }
         };
@@ -219,7 +293,6 @@ public class ClientConnection {
             sendMessage("PlayerHP:"+MinecraftClient.getInstance().player.getHealth());
     }
     public static void syncHunger() {
-        System.out.println("HS");
         if(MinecraftClient.getInstance().player!=null)
             sendMessage("PlayerHunger:"+MinecraftClient.getInstance().player.getHungerManager().getFoodLevel());
     }
