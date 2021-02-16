@@ -58,6 +58,13 @@ public class World {
 		}
 		
 		
+		
+		boolean goPath = false;
+		if(Keyboard.isKeyPressed(KeyEvent.VK_X)) {
+			Keyboard.keys[KeyEvent.VK_X] = false;
+			goPath=true;
+		}
+		
 		for(int i = 0; i<ControllServer.connections.size();i++) {
 			ServerConnection c = ControllServer.connections.get(i);
 		
@@ -68,10 +75,7 @@ public class World {
 				if(Collision.rectToRect(c.location[0], c.location[2], 1, 1, c.goal[0], c.goal[1], 5, 5))
 					c.goal = null;
 			
-			
-			if(Keyboard.isKeyPressed(KeyEvent.VK_X)) {
-				Keyboard.keys[KeyEvent.VK_X] = false;
-				
+			if(goPath) {
 				if(c.selected) {
 					c.sendMessage("chat:#goal "+Keyboard.getMousexInCoords()+" "+Keyboard.getMouseyInCoords());
 					c.sendMessage("b_path");
@@ -81,7 +85,10 @@ public class World {
 					c.goal[1]=Keyboard.getMouseyInCoords();
 				}
 			}
+			
 		}
+		
+		
 		
 		
 	}

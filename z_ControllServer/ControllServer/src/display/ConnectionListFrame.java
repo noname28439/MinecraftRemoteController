@@ -36,6 +36,7 @@ public class ConnectionListFrame {
 	}
 	
 	public static void setList(ArrayList<ServerConnection> list) {
+		try {
 		String[] newList = new String[list.size()];
 		for(int i = 0; i<list.size();i++) {
 			ServerConnection cc = list.get(i);
@@ -45,6 +46,9 @@ public class ConnectionListFrame {
 		connectionList.setListData(newList);
 		currentList = newList;
 		frame.pack();
+		}catch (java.lang.ArrayIndexOutOfBoundsException e) {
+			// TODO: handle exception
+		}
 		
 		
 	}

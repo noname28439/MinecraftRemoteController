@@ -43,7 +43,13 @@ public class ServerConnection implements Runnable {
 
         listener = new Thread(this);
         listener.start();
-
+        
+        try {Thread.currentThread().sleep(1000);} catch (InterruptedException e) {}
+        
+        for(ServerConnection cc : ControllServer.connections)
+        	for(ServerConnection cf : ControllServer.connections)
+        		if(!cc.name.equalsIgnoreCase(cf.name))
+        			cc.sendMessage("chat:.friends add "+cf.name);
         
 
     }

@@ -88,6 +88,7 @@ public class Map implements ChangeListener{
 		try {
 			for(int i = 0; i<mapData.size();i++) {
 				int[] ci = mapData.get(i);
+				if(ci.length>=3)
 				colorFromID(g, ci[2]);
 				g.fillRect((ci[0]-(int)World.mapx)*World.zoom, (ci[1]-(int)World.mapy)*World.zoom, World.zoom, World.zoom);
 				
