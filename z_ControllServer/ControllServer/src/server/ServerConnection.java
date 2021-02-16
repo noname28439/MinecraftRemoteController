@@ -32,6 +32,7 @@ public class ServerConnection implements Runnable {
     
     //For draw
     public boolean selected = false;
+    public int[] goal;
     
     public ServerConnection(Socket connection) {
         this.connection = connection;

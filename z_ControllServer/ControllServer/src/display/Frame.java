@@ -44,7 +44,12 @@ public class Frame extends JFrame{
 	
 	public void draw(Graphics g) {
 		
-		backGround = new Color(backGround.getRed()+new Random().nextInt(3)-1, backGround.getGreen()+new Random().nextInt(3)-1, backGround.getBlue()+new Random().nextInt(3)-1);
+		try {
+			backGround = new Color(backGround.getRed()+new Random().nextInt(3)-1, backGround.getGreen()+new Random().nextInt(3)-1, backGround.getBlue()+new Random().nextInt(3)-1);
+		}catch (java.lang.IllegalArgumentException e) {
+			//Too lazy to check if it is over 255 or under 0 lul!
+		}
+		
 		
 		g.setColor(backGround);
 		g.fillRect(0, 0, getWidth(), getHeight());
