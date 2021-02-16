@@ -28,6 +28,11 @@ public class ServerConnection implements Runnable {
     
     public String ip = "";
     
+    
+    
+    //For draw
+    public boolean selected = false;
+    
     public ServerConnection(Socket connection) {
         this.connection = connection;
         try {
@@ -89,15 +94,15 @@ public class ServerConnection implements Runnable {
                     	int z = Integer.valueOf(args[2]);
                     	int id = Integer.valueOf(args[3]);
                     	
-                    	try {
-                    	for(int i = 0; i<Map.mapData.size();i++){
-                    		int[] ci = Map.mapData.get(i);
-                            if(ci[0]==x&&ci[1]==z)
-                                Map.mapData.remove(ci);
-                        }
-                    	}catch (java.util.ConcurrentModificationException e) {
-    						e.printStackTrace();
-    					}
+//                    	try {
+//                    	for(int i = 0; i<Map.mapData.size();i++){
+//                    		int[] ci = Map.mapData.get(i);
+//                            if(ci[0]==x&&ci[1]==z)
+//                                Map.mapData.remove(ci);
+//                        }
+//                    	}catch (java.util.ConcurrentModificationException|java.lang.NullPointerException e) {
+//    						e.printStackTrace();
+//    					}
                     	
                     	Map.mapData.add(new int[] {x, z, id});
                 	}

@@ -27,11 +27,11 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 	}
 	
 	public static int getMousexInCoords() {
-		return -((int)World.mapx-Keyboard.getMousex());
+		return ((int)World.mapx+Keyboard.getMousex()/World.zoom);
 	}
 	
 	public static int getMouseyInCoords() {
-		return -((int)World.mapy-Keyboard.getMousey());
+		return ((int)World.mapy+Keyboard.getMousey()/World.zoom);
 	}
 	
 	
@@ -147,7 +147,7 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		
+		World.zoom-=e.getUnitsToScroll();
 		
 	}
 
