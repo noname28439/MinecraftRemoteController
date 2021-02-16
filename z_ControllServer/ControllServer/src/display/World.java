@@ -60,6 +60,8 @@ public class World {
 		
 		for(int i = 0; i<ControllServer.connections.size();i++) {
 			ServerConnection c = ControllServer.connections.get(i);
+		
+				
 			
 			
 			if(c.goal!=null)
@@ -117,6 +119,11 @@ public class World {
 			}
 		if(client.goal!=null) {
 			g.drawLine((client.location[0]-(int)mapx)*zoom, (client.location[2]-(int)mapy)*zoom, (client.goal[0]-(int)mapx)*zoom, (client.goal[1]-(int)mapy)*zoom);
+		}
+		
+		if(Keyboard.isKeyPressed(KeyEvent.VK_F)) {
+			g.setColor(Color.WHITE);
+			g.drawLine((client.location[0]-(int)mapx)*zoom, (client.location[2]-(int)mapy)*zoom, Keyboard.getMousex(), Keyboard.getMousey());
 		}
 				
 		
