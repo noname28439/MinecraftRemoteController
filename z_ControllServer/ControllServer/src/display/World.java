@@ -14,13 +14,13 @@ import server.ServerConnection;
 public class World {
 
 	public static float mapx = 0, mapy = 0;
-	public static int zoom = 1;
+	public static int zoom = 2;
 	
 	public static String watchServer = "localhost/127.0.0.1:25565";
 	/*
 	 * localhost/127.0.0.1:25565
 	 * raspberrypi.fritz.box/192.168.178.45:25567
-	 * 
+	 * mc.gommehd.com./212.224.77.62:25565
 	 */
 	
 	

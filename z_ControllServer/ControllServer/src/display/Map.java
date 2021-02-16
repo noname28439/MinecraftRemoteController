@@ -3,12 +3,86 @@ package display;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-public class Map {
+import javax.swing.JColorChooser;
+import javax.swing.JFrame;
+import javax.swing.colorchooser.ColorChooserComponentFactory;
+import javax.swing.colorchooser.ColorSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.plaf.ColorChooserUI;
 
-	public static ArrayList<int[]> mapData = new ArrayList<>();
+public class Map implements ChangeListener{
+
 	
+	public static ArrayList<int[]> mapData = new ArrayList<>();
+	public static HashMap<Integer, Color> blockColors = new HashMap<>();
+	
+	public static void loadColorPresets() {
+		
+		
+		blockColors.put(9, Color.GREEN);
+		blockColors.put(10, new Color(161, 81, 21));
+		blockColors.put(34, new Color(51, 102, 255));
+		blockColors.put(14, new Color(128, 127, 122));
+		blockColors.put(1,new Color(128, 127, 122));
+		blockColors.put(66, new Color(250, 234, 60));
+		blockColors.put(246, new Color(224, 196, 81));
+		blockColors.put(3921, new Color(255, 255, 255));
+		blockColors.put(6, new Color(138, 138, 138));
+		blockColors.put(4, new Color(207, 207, 207));
+		blockColors.put(2, new Color(138, 90, 84));
+		//blockColors.put(9, Color.GREEN);
+		
+//		else if(isLeave(id))	//Leave
+//			g.setColor(new Color(92, 140, 87));
+	}
+	
+	
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if(e.getSource() instanceof ColorSelectionModel) {
+			ColorSelectionModel csm = (ColorSelectionModel)e.getSource();
+			
+			 selectorState = csm.getSelectedColor();
+			 
+		}  
+	}
+	
+	static Color selectorState = new Color(0, 0 , 0);
+	
+	static void setColor(int id) {
+		Color result = new Color(0, 0, 0);
+		if(blockColors.containsKey(id))
+			result = blockColors.get(id);
+		
+		JColorChooser chooser = new JColorChooser(result);
+		chooser.getSelectionModel().addChangeListener(new Map());
+		
+		JFrame selectorFrame = new JFrame("Select Color for "+id);
+		selectorFrame.add(chooser);
+		
+		selectorFrame.addWindowListener(new WindowAdapter() {
+		    @Override
+		    public void windowClosing(WindowEvent windowEvent) {
+		    	blockColors.put(id, selectorState);
+		    }
+		});
+		
+		
+		selectorFrame.setLocationRelativeTo(null);
+		selectorFrame.setResizable(true);
+		selectorFrame.setVisible(true);
+		selectorFrame.pack();
+		selectorFrame.setAlwaysOnTop(true);
+		
+		
+	}
 	
 	public static void draw(Graphics g) {
 		try {
@@ -16,6 +90,21 @@ public class Map {
 				int[] ci = mapData.get(i);
 				colorFromID(g, ci[2]);
 				g.fillRect((ci[0]-(int)World.mapx)*World.zoom, (ci[1]-(int)World.mapy)*World.zoom, World.zoom, World.zoom);
+				
+				int selbid = 0;
+				if(Collision.rectToRect((ci[0]-(int)World.mapx)*World.zoom, (ci[1]-(int)World.mapy)*World.zoom, World.zoom, World.zoom, Keyboard.getMousex(), Keyboard.getMousey(), 1, 1)) 
+					selbid = ci[2];
+				if(selbid!=0) {
+					g.setColor(Color.BLACK);
+					g.drawString("ID: "+selbid, 100, 200);
+					if(Keyboard.isKeyPressed(KeyEvent.VK_C)) {
+						Keyboard.keys[KeyEvent.VK_C] = false;
+						setColor(selbid);
+					}
+						
+				}
+				
+					
 			}
 		}catch (java.lang.NullPointerException e) {
 			e.printStackTrace();
@@ -30,38 +119,24 @@ public class Map {
 		return false;
 	}
 	
+	static int invert(int color) {
+		 return color ^ 0x00ffffff;
+	}
+	
 	static void colorFromID(Graphics g, int id) {
 		
-		g.setColor(Color.WHITE);
+		g.setColor(new Color(invert(Frame.backGround.getRGB())));
+		if(blockColors.containsKey(id)) {
+			if((blockColors.get(id).getRed()+blockColors.get(id).getGreen()+blockColors.get(id).getBlue())==0)
+				g.setColor(new Color(invert(Frame.backGround.getRGB())));
+			else
+				g.setColor(blockColors.get(id));
+		}
+			
 		
-		if(id==9)	//Grass
-			g.setColor(Color.GREEN);
-		else if(id==10)	//Dirt
-			g.setColor(new Color(161, 81, 21));
-		else if(id==34) //Wasser
-			g.setColor(new Color(51, 102, 255));
-		else if(id==14)	//Cobblestone
-			g.setColor(new Color(128, 127, 122));
-		else if(id==1)	//Cleanstone
-			g.setColor(new Color(128, 127, 122));
-		else if(id==66)	//Sand
-			g.setColor(new Color(250, 234, 60));
-		else if(id==246)	//Sandstone
-			g.setColor(new Color(224, 196, 81));
-		else if(id==3921)	//Snow
-			g.setColor(new Color(255, 255, 255));
-		else if(id==6)	//Andestit
-			g.setColor(new Color(138, 138, 138));
-		else if(id==4)	//Diorit
-			g.setColor(new Color(207, 207, 207));
-		else if(id==2)	//Granit
-			g.setColor(new Color(138, 90, 84));
-		else if(isLeave(id))	//Leave
-			g.setColor(new Color(92, 140, 87));
-		else if(id==-1)
-			g.setColor(new Color(0, 0, 0));
 		
 	}
+
 	
 	
 }

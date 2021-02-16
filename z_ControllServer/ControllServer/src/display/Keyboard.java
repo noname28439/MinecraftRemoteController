@@ -89,7 +89,6 @@ public class Keyboard implements KeyListener,MouseMotionListener, MouseListener,
 		World.mapx+=mvmx/World.zoom;
 		World.mapy+=mvmy/World.zoom;
 		
-		System.err.println(mvmx+"|"+mvmx);
 			
 		
 		}else if(button==1) {
